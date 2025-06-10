@@ -15,8 +15,8 @@ def gen_golden_data_simple():
     time_reso = 1.0
     down_time_rate = 0.5
     freq = 1.0
-    DMnum = 1
-    ynum = 1
+    # DMnum = 1
+    # ynum = 1
     input_x = np.random.uniform(1, 100, [512, 1]).astype(np.float32)
     # inputDM = np.arange(32) * 45 * 1e3
     # inputy = np.arange(64)
@@ -28,8 +28,8 @@ def gen_golden_data_simple():
         #         x = input_x[i, 0]
         #         golden[i+DM*y] = 4.15 * DM * (x**-2 - freq**-2) * 1e3 / time_reso / down_time_rate + y
 
-    DM = DMnum
-    y = ynum
+    # DM = DMnum
+    # y = ynum
     for i in range(255):
         x = input_x[i, 0]
         golden[i] = 4.15 * DM * (x**-2 - freq**-2) * 1e3 / time_reso / down_time_rate + y
