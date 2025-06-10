@@ -10,6 +10,23 @@
 
 后期的ACL代码编写，参照此文档 https://www.hiascend.com/document/detail/zh/canncommercial/81RC1/developmentguide/appdevg/aclcppdevg/aclcppdevg_000022.html
 
+### 系统测试各个步骤的说明：
+
+- 基本原理：
+
+- 前置步骤： 完成。
+
+- 验证的代码工程： 基于示例修改， 没有完全核对。 
+  都要参考示例工程修改：
+> main.cpp、op_runner.cpp文件、CMakeLists.txt文件如何编写，其他文件请自行参考。
+> 代码编写完全没看，需要仔细核对修改。
+
+- 单算子调用的流程： 
+
+- 生成测试数据：
+
+
+
 
 ## Bug和进度记录等
 
@@ -21,6 +38,11 @@
 
 - [ ] 算子逻辑正确性验证：生成的测试数据的维度的问题
   - [ ] gen_data.py的代码中的数据生成
+
+
+
+## 算子的输入数据的shape
+
 
 
 
