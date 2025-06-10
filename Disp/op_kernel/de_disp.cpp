@@ -1,4 +1,5 @@
 #include "kernel_operator.h"
+#include <cstdio>
 
 using namespace AscendC;
 
@@ -9,7 +10,7 @@ public:
     __aicore__ inline KernelDedisp() {
     }
     __aicore__ inline void Init(GM_ADDR freq, GM_ADDR outfreq, uint32_t totalLength, uint32_t tileNum, 
-                                float time_reso, int32_t down_time_rate, float xTeam, int32_t y, float freq1) {
+                                float time_reso = 1.0, int32_t down_time_rate = 2, float xTeam = 4150.0, int32_t y = 1, float freq1 = 1.0) {
         //*
         this->time_reso = time_reso;
         this->down_time_rate = down_time_rate;
@@ -64,6 +65,7 @@ private:
         DataCopy(freqLocal, freqGm[progress * this->tileLength], this->tileLength);
         // 将LocalTesor放入VECIN（代表矢量编程中搬入数据的逻辑存放位置）的Queue中
         inQueuefreq.EnQue(freqLocal);
+        printf("[INFO] CopyIn success\n");
     }
     // 计算函数，完成Compute阶段的处理，被核心Process函数调用
     __aicore__ inline void Compute(int32_t progress)
@@ -86,16 +88,12 @@ private:
         // float inputVal2 = (time_reso < 1e-6f) ? 1e6f : 1/time_reso;
         float inputVal2 = 1/time_reso;
         float inputVal3 = 1/down_time_rate;
-        for (int i = 0; i < 32; i++) {
-            xTeam = i * 4.15 * 1e3;
-            for (y = 0; y < 64; y++) {
-                Adds(tmpTensor1, freqLocal, inputVal1, this->tileLength);
-                Muls(tmpTensor2, tmpTensor1, xTeam, this->tileLength);
-                Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
-                Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
-                Adds(tmpTensor5, tmpTensor4, static_cast<float>(y), tileLength);
-            }
-        }
+
+        Adds(tmpTensor1, freqLocal, inputVal1, this->tileLength);
+        Muls(tmpTensor2, tmpTensor1, xTeam, this->tileLength);
+        Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
+        Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
+        Adds(tmpTensor5, tmpTensor4, static_cast<float>(y), tileLength);
         
         //*
         uint32_t offset = progress * this->tileLength;
@@ -136,11 +134,11 @@ private:
     uint32_t tileNum;
     // 每个分块大小
     uint32_t tileLength;
-    float time_reso = 1.0;
-    int32_t down_time_rate = 0.5;
-    float xTeam = 4.25 * 1e3;
-    float y = 1.0;
-    float freq1 = 1.0;
+    float time_reso;
+    int32_t down_time_rate;
+    float xTeam;
+    float y;
+    float freq1;
 };
 
 extern "C" __global__ __aicore__ void de_disp(GM_ADDR freq, GM_ADDR outfreq, GM_ADDR workspace, GM_ADDR tiling) {
@@ -149,7 +147,9 @@ extern "C" __global__ __aicore__ void de_disp(GM_ADDR freq, GM_ADDR outfreq, GM_
     op.Init(freq, outfreq, tiling_data.totalLength, tiling_data.tileNum,
          tiling_data.time_reso, tiling_data.down_time_rate, tiling_data.xTeam, tiling_data.y, tiling_data.freq1);
     op.Process();
+    main
     // TODO : 需要调试处理加载这个函数调用进行编译时产生的 workspace size 报错问题。  -- 2025.6.10
     // 发现这里似乎没有调用Process()函数，所以没有输出，应该调用此函数。
     // 晟腾技术人员让注释掉，不应该这样做，算子必须要调用process函数才能计算，即便有报错 workspace 的问题也不该这样做。 
+
 }
