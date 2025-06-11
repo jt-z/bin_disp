@@ -147,4 +147,9 @@ extern "C" __global__ __aicore__ void de_disp(GM_ADDR freq, GM_ADDR outfreq, GM_
     op.Init(freq, outfreq, tiling_data.totalLength, tiling_data.tileNum,
          tiling_data.time_reso, tiling_data.down_time_rate, tiling_data.xTeam, tiling_data.y, tiling_data.freq1);
     op.Process();
+    main
+    // TODO : 需要调试处理加载这个函数调用进行编译时产生的 workspace size 报错问题。  -- 2025.6.10
+    // 发现这里似乎没有调用Process()函数，所以没有输出，应该调用此函数。
+    // 晟腾技术人员让注释掉，不应该这样做，算子必须要调用process函数才能计算，即便有报错 workspace 的问题也不该这样做。 
+
 }
