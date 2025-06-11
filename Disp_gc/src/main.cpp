@@ -46,7 +46,7 @@ bool SetInputData(OpRunner &runner)
 
 bool ProcessOutputData(OpRunner &runner)
 {
-    WriteFile("../output/output_z.bin", runner.GetOutputBuffer<void>(0), runner.GetOutputSize(0));
+    WriteFile("../output/outputfreq.bin", runner.GetOutputBuffer<void>(0), runner.GetOutputSize(0));
     INFO_LOG("Write output success");
     return true;
 }
