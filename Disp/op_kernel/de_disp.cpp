@@ -1,5 +1,5 @@
 #include "kernel_operator.h"
-#include <cstdio>
+// #include <cstdio>
 
 using namespace AscendC;
 
@@ -65,7 +65,7 @@ private:
         DataCopy(freqLocal, freqGm[progress * this->tileLength], this->tileLength);
         // 将LocalTesor放入VECIN（代表矢量编程中搬入数据的逻辑存放位置）的Queue中
         inQueuefreq.EnQue(freqLocal);
-        printf("[INFO] CopyIn success\n");
+        // printf("[INFO] CopyIn success\n");
     }
     // 计算函数，完成Compute阶段的处理，被核心Process函数调用
     __aicore__ inline void Compute(int32_t progress)
