@@ -9,6 +9,8 @@ Disp_gc/build1
 Disp/build_out
 Disp/cmake
 
+Disp_gc/build*
+
 Dispall.zip
 Drafts.json
 Drafts/
