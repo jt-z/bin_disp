@@ -320,7 +320,7 @@ bool OpRunner::RunOp()
         ERROR_LOG("Get Operator Workspace failed. error code is %d", static_cast<int32_t>(ret));
         return false;
     }
-    INFO_LOG("Execute aclnnAddCustomGetWorkspaceSize success, workspace size %lu", workspaceSize);
+    INFO_LOG("Execute aclnnDeDispGetWorkspaceSize success, workspace size %lu", workspaceSize);
 
     if (workspaceSize != 0) {
         if (aclrtMalloc(&workspace_, workspaceSize, ACL_MEM_MALLOC_HUGE_FIRST) != ACL_SUCCESS) {
@@ -335,7 +335,7 @@ bool OpRunner::RunOp()
         ERROR_LOG("Execute Operator failed. error code is %d", static_cast<int32_t>(ret));
         return false;
     }
-    INFO_LOG("Execute aclnnAddCustom success");
+    INFO_LOG("Execute aclnnDeDisp success");
 
     // The unit of 5000 is ms.
     ret = aclrtSynchronizeStreamWithTimeout(stream, 40000);
