@@ -19,11 +19,11 @@ public:
         this->freq1 = freq1;
         ASSERT(totalLength % GetBlockNum() == 0);
         // 使用获取到的TilingData计算得到singleCoreSize(每个核上总计算数据大小)、tileNum（每个核上分块个数）、singleTileLength（每个分块大小）等变量
-        this->blockLength = totalLength / GetBlockNum();
+        this->blockLength = totalLength / GetBlockNum(); //总长度除以分块数目可以得到每一块的长度，即每个核要计算的数据的大小
         this->tileNum = tileNum;
         //*
         ASSERT(this->blockLength % (tileNum * BUFFER_NUM) == 0);
-        this->tileLength = this->blockLength / tileNum / BUFFER_NUM;
+        this->tileLength = this->blockLength / tileNum / BUFFER_NUM; //每个核计算数据大小除以每个核的分块数除以buffer数目，即每个核中每个buffer的大小
         
         // 获取当前核的起始索引
         ASSERT((blockLength * (GetBlockIdx() + 1)) <= totalLength);
