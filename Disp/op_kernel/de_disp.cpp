@@ -3,7 +3,7 @@
 
 using namespace AscendC;
 
-constexpr int32_t BUFFER_NUM = 2;
+constexpr int32_t BUFFER_NUM = 1;
 template<typename DTYPE>
 class KernelDedisp {
 public:
