@@ -1,5 +1,5 @@
 #include "kernel_operator.h"
-// #include <cstdio>
+#include <cstdio>
 
 using namespace AscendC;
 
@@ -54,6 +54,12 @@ public:
             CopyOut(i);
         }
     }
+    // 带Tensor shape的打印
+    // template <typename T>
+    // __aicore__ inline void DumpTensor(const LocalTensor<T>& tensor, uint32_t desc, uint32_t dumpSize, const ShapeInfo& shapeInfo)
+    // template <typename T>
+    // __aicore__ inline void DumpTensor(const GlobalTensor<T>& tensor, uint32_t desc, uint32_t dumpSize, const ShapeInfo& shapeInfo)
+
 
 private:
     // 搬入函数，完成CopyIn阶段的处理，被核心Process函数调用
@@ -65,7 +71,6 @@ private:
         DataCopy(freqLocal, freqGm[progress * this->tileLength], this->tileLength);
         // 将LocalTesor放入VECIN（代表矢量编程中搬入数据的逻辑存放位置）的Queue中
         inQueuefreq.EnQue(freqLocal);
-        // printf("[INFO] CopyIn success\n");
     }
     // 计算函数，完成Compute阶段的处理，被核心Process函数调用
     __aicore__ inline void Compute(int32_t progress)
@@ -88,19 +93,22 @@ private:
         // float inputVal2 = (time_reso < 1e-6f) ? 1e6f : 1/time_reso;
         float inputVal2 = 1/time_reso;
         float inputVal3 = 1/down_time_rate;
+        
+        Adds(outfreqLocal, freqLocal, inputVal1, this->tileLength);
+        // Muls(tmpTensor2, tmpTensor1, xTeam, this->tileLength);
+        // Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
+        // Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
+        // Adds(outfreqLocal, tmpTensor4, static_cast<float>(y), tileLength);
 
-        Adds(tmpTensor1, freqLocal, inputVal1, this->tileLength);
-        Muls(tmpTensor2, tmpTensor1, xTeam, this->tileLength);
-        Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
-        Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
-        Adds(tmpTensor5, tmpTensor4, static_cast<float>(y), tileLength);
+        //打印最后计算结果的tensor信息，维度以及tensor的内容
+        AscendC::DumpTensor(outfreqLocal,5, this->tileLength); 
         
         //*
         uint32_t offset = progress * this->tileLength;
         //*
         ASSERT(offset + this->tileLength <= this->blockLength);
         //*
-        DataCopy(outfreqLocal, tmpTensor5, this->tileLength);
+        // DataCopy(outfreqLocal, tmpTensor5, this->tileLength);
         // 将计算结果LocalTensor放入到VecOut的Queue中
         outQueueoutfreq.EnQue<DTYPE>(outfreqLocal);
         // 释放输入Tensor
