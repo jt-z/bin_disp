@@ -99,6 +99,7 @@ private:
         // Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
         // Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
         // Adds(outfreqLocal, tmpTensor4, static_cast<float>(y), tileLength);
+    
 
         //打印最后计算结果的tensor信息，维度以及tensor的内容
         AscendC::DumpTensor(outfreqLocal,5, this->tileLength); 
