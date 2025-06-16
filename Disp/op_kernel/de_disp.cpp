@@ -11,7 +11,7 @@ public:
     }
     __aicore__ inline void Init(GM_ADDR freq, GM_ADDR outfreq, uint32_t totalLength, uint32_t tileNum, 
                                 float time_reso, float down_time_rate, float xTeam, float y, float freq1) {
-        //*
+
         this->time_reso = time_reso;
         this->down_time_rate = down_time_rate;
         this->xTeam = xTeam;
@@ -21,7 +21,7 @@ public:
         // 使用获取到的TilingData计算得到singleCoreSize(每个核上总计算数据大小)、tileNum（每个核上分块个数）、singleTileLength（每个分块大小）等变量
         this->blockLength = totalLength / GetBlockNum(); //总长度除以分块数目可以得到每一块的长度，即每个核要计算的数据的大小
         this->tileNum = tileNum;
-        //*
+
         ASSERT(this->blockLength % (tileNum * BUFFER_NUM) == 0);
         this->tileLength = this->blockLength / tileNum / BUFFER_NUM; //每个核计算数据大小除以每个核的分块数除以buffer数目，即每个核中每个buffer的大小
         
@@ -30,7 +30,6 @@ public:
         freqGm.SetGlobalBuffer((__gm__ DTYPE*)freq + this->blockLength * GetBlockIdx(), this->blockLength);
         outfreqGm.SetGlobalBuffer((__gm__ DTYPE*)outfreq + this->blockLength * GetBlockIdx(), this->blockLength);
         // 通过Pipe内存管理对象为输入输出Queue分配内存
-        // ASSERT((tileLength * sizeof(DTYPE)) % 16 == 0);  // 16字节对齐示例
         pipe.InitBuffer(inQueuefreq, BUFFER_NUM, this->tileLength * sizeof(DTYPE));
         pipe.InitBuffer(outQueueoutfreq, BUFFER_NUM, this->tileLength * sizeof(DTYPE));
         ASSERT(tmpBuffer1.GetSize() >= tileLength * sizeof(DTYPE));
@@ -54,12 +53,6 @@ public:
             CopyOut(i);
         }
     }
-    // 带Tensor shape的打印
-    // template <typename T>
-    // __aicore__ inline void DumpTensor(const LocalTensor<T>& tensor, uint32_t desc, uint32_t dumpSize, const ShapeInfo& shapeInfo)
-    // template <typename T>
-    // __aicore__ inline void DumpTensor(const GlobalTensor<T>& tensor, uint32_t desc, uint32_t dumpSize, const ShapeInfo& shapeInfo)
-
 
 private:
     // 搬入函数，完成CopyIn阶段的处理，被核心Process函数调用
@@ -89,9 +82,8 @@ private:
         //*
         ASSERT(time_reso != 0.0f);
         ASSERT(down_time_rate != 0);
-        // float inputVal1 = -1.0;
+
         float inputVal1 = -this->freq1;
-        // float inputVal2 = (time_reso < 1e-6f) ? 1e6f : 1/time_reso;
         float inputVal0 = this->xTeam;
         float inputVal2 = 1 / this->time_reso;
         float inputVal3 = 1 / this->down_time_rate;
@@ -104,15 +96,13 @@ private:
         Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
         Adds(outfreqLocal, tmpTensor4, inputValy, tileLength);
     
-
         //打印最后计算结果的tensor信息，维度以及tensor的内容
         // AscendC::DumpTensor(outfreqLocal,5, this->tileLength); 
         
-        //*
         uint32_t offset = progress * this->tileLength;
-        //*
+
         ASSERT(offset + this->tileLength <= this->blockLength);
-        //*
+
         // DataCopy(outfreqLocal, freqLocal, this->tileLength);
         // 将计算结果LocalTensor放入到VecOut的Queue中
         outQueueoutfreq.EnQue<DTYPE>(outfreqLocal);
@@ -160,9 +150,4 @@ extern "C" __global__ __aicore__ void de_disp(GM_ADDR freq, GM_ADDR outfreq, GM_
     op.Init(freq, outfreq, tiling_data.totalLength, tiling_data.tileNum,
          tiling_data.time_reso, tiling_data.down_time_rate, tiling_data.xTeam, tiling_data.y, tiling_data.freq1);
     op.Process();
-    // main
-    // TODO : 需要调试处理加载这个函数调用进行编译时产生的 workspace size 报错问题。  -- 2025.6.10
-    // 发现这里似乎没有调用Process()函数，所以没有输出，应该调用此函数。
-    // 晟腾技术人员让注释掉，不应该这样做，算子必须要调用process函数才能计算，即便有报错 workspace 的问题也不该这样做。 
-
 }
