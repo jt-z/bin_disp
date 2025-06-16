@@ -13,10 +13,10 @@ import numpy as np
 
 def gen_golden_data_simple():
     time_reso = 1.0
-    down_time_rate = 2
+    down_time_rate = 2.0
     freq = 1.0
-    DM = 1
-    y = 1
+    DM = 1.0
+    y = 1.0
     # DMnum = 1
     # ynum = 1
     input_x = (np.random.uniform(1, 100, [512, 1]).astype(np.float32))**(-2) # 输入数据的shape为 一维向量 512,1 的， 为512个观测频率波段。
@@ -37,7 +37,7 @@ def gen_golden_data_simple():
         # print(x)
         golden[i] = 4.15 * DM * (x - freq**(-2)) * 1e3 / time_reso / down_time_rate + y
         # golden[i] = x - freq**(-2) # 检验算子部分add计算是否成功
-        # golden[i] = 4.15 * DM * (x - freq**(-2)) * 1e3 # 检验算子中间计算是否成功
+        # golden[i] = 4.15 * DM * (x - freq**(-2)) * 1e3 / time_reso # 检验算子中间计算是否成功
 
 
     input_x.tofile("./input/inputfreq.bin")

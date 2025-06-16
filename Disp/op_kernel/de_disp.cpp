@@ -10,7 +10,7 @@ public:
     __aicore__ inline KernelDedisp() {
     }
     __aicore__ inline void Init(GM_ADDR freq, GM_ADDR outfreq, uint32_t totalLength, uint32_t tileNum, 
-                                float time_reso = 1.0f, int32_t down_time_rate = 2, float xTeam = 4150.0f, int32_t y = 1, float freq1 = 1.0f) {
+                                float time_reso, float down_time_rate, float xTeam, float y, float freq1) {
         //*
         this->time_reso = time_reso;
         this->down_time_rate = down_time_rate;
@@ -89,12 +89,13 @@ private:
         //*
         ASSERT(time_reso != 0.0f);
         ASSERT(down_time_rate != 0);
-        float inputVal1 = -1.0;
+        // float inputVal1 = -1.0;
+        float inputVal1 = -this->freq1;
         // float inputVal2 = (time_reso < 1e-6f) ? 1e6f : 1/time_reso;
-        float inputVal0 = 4.15*1e3;
-        float inputVal2 = 1.0;
-        float inputVal3 = 0.5;
-        float inputValy = 1.0;
+        float inputVal0 = this->xTeam;
+        float inputVal2 = 1 / this->time_reso;
+        float inputVal3 = 1 / this->down_time_rate;
+        float inputValy = this->y;
         
         // AscendC::DumpTensor(freqLocal,5, this->tileLength);
         Adds(tmpTensor1, freqLocal, inputVal1, this->tileLength);
@@ -147,7 +148,7 @@ private:
     // 每个分块大小
     uint32_t tileLength;
     float time_reso;
-    int32_t down_time_rate;
+    float down_time_rate;
     float xTeam;
     float y;
     float freq1;
