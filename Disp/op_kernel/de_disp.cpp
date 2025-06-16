@@ -91,16 +91,17 @@ private:
         ASSERT(down_time_rate != 0);
         float inputVal1 = -1.0;
         // float inputVal2 = (time_reso < 1e-6f) ? 1e6f : 1/time_reso;
-        float inputVal2 = 1/time_reso;
-        float inputVal3 = 1/down_time_rate;
+        float inputVal0 = 4.15*1e3;
+        float inputVal2 = 1.0;
+        float inputVal3 = 0.5;
+        float inputValy = 1.0;
         
         // AscendC::DumpTensor(freqLocal,5, this->tileLength);
-        Adds(outfreqLocal, freqLocal, inputVal1, this->tileLength);
-        // AscendC::DumpTensor(outfreqLocal,5, this->tileLength);
-        // Muls(tmpTensor2, tmpTensor1, xTeam, this->tileLength);
-        // Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
-        // Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
-        // Adds(outfreqLocal, tmpTensor4, static_cast<float>(y), tileLength);
+        Adds(tmpTensor1, freqLocal, inputVal1, this->tileLength);
+        Muls(tmpTensor2, tmpTensor1, inputVal0, this->tileLength);
+        Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
+        Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
+        Adds(outfreqLocal, tmpTensor4, inputValy, tileLength);
     
 
         //打印最后计算结果的tensor信息，维度以及tensor的内容
