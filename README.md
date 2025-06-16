@@ -15,6 +15,8 @@ cd /usr/local/Ascend/ascend-toolkit/latest/python/site-packages/bin/Disp
 ./build.sh
 cd build_out/
 ./custom_opp_ubuntu_aarch64.run
+cd /usr/local/Ascend/ascend-toolkit/latest/python/site-packages/bin/Disp_gc
+python3 scripts/gen_data.py
 cd /usr/local/Ascend/ascend-toolkit/latest/python/site-packages/bin/Disp_gc/build
 cmake ../src
 make
@@ -23,7 +25,6 @@ export ASCEND_SLOG_PRINT_TO_STDOUT=0
 export ASCEND_GLOBAL_LOG_LEVEL=1
 ./execute_disp_op
 cd ..
-python3 scripts/gen_data.py
 python3 scripts/verify_result.py output/outputfreq.bin output/golden.bin
 
 （此版本用于打印输出log文档，排查代码报错情况，用于排查代码报错问题）
