@@ -10,7 +10,7 @@ public:
     __aicore__ inline KernelDedisp() {
     }
     __aicore__ inline void Init(GM_ADDR freq, GM_ADDR outfreq, uint32_t totalLength, uint32_t tileNum, 
-                                float time_reso = 1.0, int32_t down_time_rate = 2, float xTeam = 4150.0, int32_t y = 1, float freq1 = 1.0) {
+                                float time_reso = 1.0f, int32_t down_time_rate = 2, float xTeam = 4150.0f, int32_t y = 1, float freq1 = 1.0f) {
         //*
         this->time_reso = time_reso;
         this->down_time_rate = down_time_rate;
@@ -89,12 +89,14 @@ private:
         //*
         ASSERT(time_reso != 0.0f);
         ASSERT(down_time_rate != 0);
-        float inputVal1 = -1*freq1;
+        float inputVal1 = -1.0;
         // float inputVal2 = (time_reso < 1e-6f) ? 1e6f : 1/time_reso;
         float inputVal2 = 1/time_reso;
         float inputVal3 = 1/down_time_rate;
         
+        // AscendC::DumpTensor(freqLocal,5, this->tileLength);
         Adds(outfreqLocal, freqLocal, inputVal1, this->tileLength);
+        // AscendC::DumpTensor(outfreqLocal,5, this->tileLength);
         // Muls(tmpTensor2, tmpTensor1, xTeam, this->tileLength);
         // Muls(tmpTensor3, tmpTensor2, inputVal2, this->tileLength);
         // Muls(tmpTensor4, tmpTensor3, inputVal3, this->tileLength);
@@ -102,14 +104,14 @@ private:
     
 
         //打印最后计算结果的tensor信息，维度以及tensor的内容
-        AscendC::DumpTensor(outfreqLocal,5, this->tileLength); 
+        // AscendC::DumpTensor(outfreqLocal,5, this->tileLength); 
         
         //*
         uint32_t offset = progress * this->tileLength;
         //*
         ASSERT(offset + this->tileLength <= this->blockLength);
         //*
-        // DataCopy(outfreqLocal, tmpTensor5, this->tileLength);
+        // DataCopy(outfreqLocal, freqLocal, this->tileLength);
         // 将计算结果LocalTensor放入到VecOut的Queue中
         outQueueoutfreq.EnQue<DTYPE>(outfreqLocal);
         // 释放输入Tensor

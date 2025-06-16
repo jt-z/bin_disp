@@ -38,8 +38,6 @@ bool SetInputData(OpRunner &runner)
 {
     size_t fileSize = 0;
     ReadFile("../input/inputfreq.bin", fileSize, runner.GetInputBuffer<void>(0), runner.GetInputSize(0));
-    // ReadFile("../input/inputdm.bin", fileSize, runner.GetInputBuffer<void>(0), runner.GetInputSize(0));
-    // ReadFile("../input/inputy.bin", fileSize, runner.GetInputBuffer<void>(0), runner.GetInputSize(0));
     INFO_LOG("Set input success");
     return true;
 }
