@@ -18,6 +18,40 @@ disp算子工程以及dispACL算子测试工程代码
 |10000 |22s   | 10s        |
 |100000 |210s   | 65s        |
 
+**性能分析**
+![e0692bc5df3fa3ab53f2ad0290378be](https://github.com/user-attachments/assets/bfcf870c-2909-486f-8918-78f1ae7bddd9)
+
+**CPU运行情况**
+
+单线程cpu
+
+![image](https://github.com/user-attachments/assets/d652570c-8684-4b51-b0c4-b56fbeb92b17)
+
+计算的输入数据
+
+(np.random.uniform(1, 100, [512, 1]).astype(np.float32))**(-2)
+
+计算公式的情况
+
+golden[i] = 4.15 * DM * (x - freq**(-2)) * 1e3 / time_reso / down_time_rate + y
+
+**npu使用情况**
+
+![7a3a1a79083eb8a7b992dabb8c140f5](https://github.com/user-attachments/assets/e35d4d84-8e0a-431b-9145-0af5615beaf9)
+
+大致逻辑
+
+Adds 计算x与freq**(-2)的差值得到结果1
+
+Muls 计算结果1与4.15 * DM * 1e3的乘积得到结果2
+
+Muls 计算结果2与time_reso的商得到结果3
+
+Muls 计算结果3与down_time_rate的商得到结果4
+
+Adds 计算结果4与y的和得到最终结果
+
+
 ## 代码运行全流程命令如下：
 （此版本为不输出详细log信息的情况，适用于已经调通的代码，用于调整计算逻辑）
 ```
@@ -76,4 +110,5 @@ https://www.hiascend.com/document/detail/zh/canncommercial/800/developmentguide/
 但是在ACL算子测试工程中，运行make命令的时候，出现了以下报错
 
 ![image](https://github.com/user-attachments/assets/dbfe8bee-edc4-49a9-a4d6-32d3dc154a6a)
+
 **问题原因**：没有包含头文件#include "aclnn_de_disp"
