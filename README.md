@@ -66,5 +66,6 @@ https://www.hiascend.com/document/detail/zh/canncommercial/800/developmentguide/
 也已经按照这个文档进行了自定义算子的开发
 自定义算子已经编译部署好了
 但是在ACL算子测试工程中，运行make命令的时候，出现了以下报错
+
 ![image](https://github.com/user-attachments/assets/dbfe8bee-edc4-49a9-a4d6-32d3dc154a6a)
 **问题原因**：没有包含头文件#include "aclnn_de_disp"
