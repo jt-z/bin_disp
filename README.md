@@ -9,6 +9,14 @@ disp算子工程以及dispACL算子测试工程代码
 
 代码库基准代码: 可以参照 cann 8.0.RC2 版本的 示例 add_custom算子代码：内部包括算子的核心Process()函数代码逻辑  https://gitee.com/ascend/samples/blob/8.0.RC2/operator/AddCustomSample/FrameworkLaunch/AddCustom/op_kernel/add_custom.cpp
 
+## 代码性能测试
+### 手动测试
+| | CPU      | NPU |
+|----------- |----------- | ----------- |
+|100 |2.8s      | 3s       |
+|1000 |3s   | 3s        |
+|10000 |22s   | 3s        |
+|100000 |210s   | 3s        |
 
 ## 代码运行全流程命令如下：
 （此版本为不输出详细log信息的情况，适用于已经调通的代码，用于调整计算逻辑）
