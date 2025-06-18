@@ -151,3 +151,61 @@ https://www.hiascend.com/document/detail/zh/canncommercial/800/developmentguide/
 ![image](https://github.com/user-attachments/assets/dbfe8bee-edc4-49a9-a4d6-32d3dc154a6a)
 
 **问题原因**：没有包含头文件#include "aclnn_de_disp"
+
+### libnnopbase.so 依赖两个符号，但它们在 Ascend 工具链的所有库中都不存在
+
+![image](https://github.com/user-attachments/assets/ff7a0641-28db-4836-839f-659cbc826fbd)
+
+主要是由于CMakeLists中的路径设置问题，重新修改CMakeLists中路径之后问题得到解决
+
+### Get Operator Workspace failed. error code is 561003
+
+![image](https://github.com/user-attachments/assets/4f97fa82-bdb1-47d5-be3f-3f4224ad3444)
+
+![image](https://github.com/user-attachments/assets/90666fda-0a97-49bd-ba94-554954bded32)
+
+算子只能处理float32类型的数据，但是在ACL算子测试工程中设置的数据类型是float16，所以出现了数据类型不匹配的问题
+
+### 507015问题
+
+![image](https://github.com/user-attachments/assets/6f469c3a-1795-48fe-90c6-c7440a034c8e)
+
+一般是由于算子编写问题导致，需要到算子kernel侧代码中寻找问题
+
+### CPU和NPU计算结果维度不匹配的问题
+
+主要是因为循环中计算结果没有进行拼接的问题导致结果的覆盖
+
+### CPU端计算结果维度问题
+
+CPU端计算结果维度总是设定维度的二倍
+
+由于numpy中zeros默认数据类型是float16，导致计算所得张量维度变为设定的二倍
+
+### NPU端计算结果得0的问题
+
+之前技术人员让注释掉算子process部分，导致算子一直不能被调用。现在已经取消了process的注释。算子可以被正常调到。但是算子不能完整的被执行。
+
+针对算子kernel侧的代码进行了逐一的排查，发现将算子中buffer数目修改成1之后，算子可以正常被调用执行。主要原因是算子编写过程中没有按照双buffer来安排数据，但是buffer数目设置为了2，所以会导致执行失败。但是官方给出的样例中也没有显示设定双buffer的内容，具体问题还在研究中，代码已经跑通。
+
+### 算子内部无法打印信息的问题
+
+昇腾内部用于打印tensor信息的API，用可以成功使用其输出tensor形状。
+
+AscendC::DumpTensor(freqLocal,5, this->tileLength);
+
+### CPU和npu端接受到数据不一致的问题
+
+由于npu端使用的是缓存的上次生成的数据而CPU使用的是新生成的数据，主要是由于算子加载在CPU计算之前，所以需要在算子加载数据之前就要将输入数据生成好，否则会出现NPU加载的是旧数据的问题，哪怕删除bin文件，算子中也依然保存着之前获取的数据。
+
+### 算子中定值没有接受到的问题
+
+由于官方文档和样例中没有太多的描述，所以先尝试在函数形参中给了默认值，发现算子内部无法获取到这部分的数值。因此先使用在算子内部设常数的方法确保算子计算结果正确。之后查阅文档的过程中发现了关于在tiling中赋初值的内容，尝试在tiling中进行值的设置，部分计算可以完成。
+
+然后发现在除2操作时，会出现计算全部得0的问题，考虑到是由于精度问题，原始的函数设置的除2是整数，导致0.5直接截断为0，所以将一些相关的常数类型都改为了浮点数，之后计算通过。
+
+
+
+
+
+
