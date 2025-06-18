@@ -53,9 +53,31 @@ Adds 计算结果4与y的和得到最终结果
 
 ## 比较分析下原有的整个disp函数中我们这部分大部分的计算占比
 
-## 把这个项目的相关代码和数据梳理成文档，方便后面我们迁移到其他机器上，还有就是相关的数据和代码备份一下
 
-## 把这个容器里的系统、 驱动版本等、典型路径等环境梳理下
+
+## 项目的相关代码和数据
+
+## 容器系统、 驱动版本、典型路径等环境
+
+**容器系统**
+
+![image](https://github.com/user-attachments/assets/76e9dab5-a6f9-4d29-a575-59e033d75ae4)
+
+![image](https://github.com/user-attachments/assets/18572222-af53-421c-8fc8-ee201562a7c1)
+
+**驱动版本**
+
+![image](https://github.com/user-attachments/assets/2c3429cb-9890-4c98-b165-5348724d685c)
+
+**典型路径**
+
+部分常用头文件路径
+
+/usr/local/Ascend/ascend-toolkit/8.0.RC2.2/aarch64-linux/include/acl/acl.h
+
+/usr/local/Ascend/ascend-toolkit/8.0.RC2.2/aarch64-linux/include/acl/acl_op_compiler.h
+
+/usr/local/Ascend/ascend-toolkit/latest/python/site-packages/bin/Disp/build_out/autogen/aclnn_de_disp.h
 
 ## 代码运行全流程命令如下：
 （此版本为不输出详细log信息的情况，适用于已经调通的代码，用于调整计算逻辑）
