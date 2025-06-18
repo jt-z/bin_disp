@@ -88,7 +88,7 @@ private:
         float inputVal2 = 1 / this->time_reso;
         float inputVal3 = 1 / this->down_time_rate;
         float inputValy = this->y;
-        
+
         // AscendC::DumpTensor(freqLocal,5, this->tileLength);
         Adds(tmpTensor1, freqLocal, inputVal1, this->tileLength);
         Muls(tmpTensor2, tmpTensor1, inputVal0, this->tileLength);
@@ -150,4 +150,7 @@ extern "C" __global__ __aicore__ void de_disp(GM_ADDR freq, GM_ADDR outfreq, GM_
     op.Init(freq, outfreq, tiling_data.totalLength, tiling_data.tileNum,
          tiling_data.time_reso, tiling_data.down_time_rate, tiling_data.xTeam, tiling_data.y, tiling_data.freq1);
     op.Process();
+    // for (int i = 0; i < 100000; i++) {
+    //     op.Process();
+    // }
 }
