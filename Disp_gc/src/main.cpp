@@ -127,12 +127,12 @@ bool RunOp()
     }
 
     // Run op
-    for (int i=0; i<100000; i++) {
+    // for (int i=0; i<100000; i++) {
         if (!opRunner.RunOp()) {
             ERROR_LOG("Run op failed");
             return false;
         }
-    }
+    // }
     
     // process output data
     if (!ProcessOutputData(opRunner)) {

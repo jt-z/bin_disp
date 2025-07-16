@@ -1,0 +1,39 @@
+[
+    {
+        "case_name": "Test_DeDisp_001", 
+        "op": "DeDisp", 
+        "input_desc": [ 
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float32"
+                ],
+                "shape": [512,1],
+                "data_distribute": [ 
+                    "uniform"
+                ],
+                "value_range": [ 
+                    [
+                        1.0,
+                        100.0
+                    ]
+                ],
+                "name": "freq"
+            }
+        ],
+        "output_desc": [
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
+                ],
+                "shape": [512,1],
+                "name": "y"
+            }
+        ]
+    }
+]
